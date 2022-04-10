@@ -66,7 +66,7 @@ const FormCotisation = () => {
                 ...selectCiudad,
             }
             //console.log(data);
-            fetch('http://127.0.0.1:8000/api/cotizacion/crear', {
+            fetch('https://agile-coast-39183.herokuapp.com/api/cotizacion/crear', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -83,7 +83,7 @@ const FormCotisation = () => {
                 }
             });
 
-            fetch('http://127.0.0.1:8000/api/cotizacion/mail', {
+            fetch('https://agile-coast-39183.herokuapp.com/api/cotizacion/mail', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
