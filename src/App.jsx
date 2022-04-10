@@ -22,14 +22,14 @@ const Offcanv = () => {
         ¡Cotiza la tuya!
       </Button>
 
-      <Offcanvas show={show} onHide={handleClose} placement="end">
-        <Offcanvas.Header closeButton>
-        </Offcanvas.Header>
-        <OffcanvasBody>
-          <FormCotisation/>
-        </OffcanvasBody>
+      <Offcanvas show={show} onHide={handleClose} placement="end" scroll={true} backdrop= {true}>
+      <Offcanvas.Header closeButton>
+      </Offcanvas.Header>
+      <OffcanvasBody>
+        <FormCotisation />
+      </OffcanvasBody>
 
-      </Offcanvas>
+    </Offcanvas>
     </>
   )
 }

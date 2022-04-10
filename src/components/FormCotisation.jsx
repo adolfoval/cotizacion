@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Swal from "sweetalert2";
 
 const FormCotisation = () => {
 
@@ -49,6 +50,18 @@ const FormCotisation = () => {
         });
     };
 
+    const handleNum = (event) => {
+        if (!/[0-9]/.test(event.key)) {
+            event.preventDefault();
+        }
+    };
+
+    const handleLett = (event) => {
+        if (!/[a-z A-Z]/.test(event.key)) {
+            event.preventDefault();
+        }
+    };
+
     const handleSubmit = (event) => {
         let data = {};
         /*Funcion para manejar el envio de los datos del formulario */
@@ -58,7 +71,88 @@ const FormCotisation = () => {
         } else {
             actuAlertTerminos(false);
         }
-        if (ciudad && checkboxTerminos && datosForm && selectCiudad) {
+
+        if (datosForm) {
+            if ("modelo" in datosForm) {
+                if (datosForm.modelo === "false") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Debe elegir un modelo',
+                        showConfirmButton: false,
+                        timer: 1900
+                    });
+                    return;
+                }
+            }
+
+            if ("nombre" in datosForm) {
+                if (!datosForm.nombre.trim()) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Debe digitar el nombre',
+                        showConfirmButton: false,
+                        timer: 1900
+                    });
+                    return;
+                }
+            }
+
+            if ("email" in datosForm) {
+                if (!datosForm.email.trim()) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Debe digitar un email',
+                        showConfirmButton: false,
+                        timer: 1900
+                    });
+                    return;
+                }
+            }
+
+            if ("celular" in datosForm) {
+                if (!datosForm.celular.trim()) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Debe digitar un numero celular',
+                        showConfirmButton: false,
+                        timer: 1900
+                    });
+                    return;
+                }
+            }
+
+            if (selectDepartamento) {
+                if (selectDepartamento.departamento === "false") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Debe elegir un departamento',
+                        showConfirmButton: false,
+                        timer: 1900
+                    });
+                    return;
+                }
+            }
+
+            if (selectCiudad) {
+                if (selectCiudad.ciudad === "false") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Debe elegir una ciudad',
+                        showConfirmButton: false,
+                        timer: 1900
+                    });
+                    return;
+                }
+            }
+        }
+
+        if (ciudad && checkboxTerminos && datosForm && selectCiudad && selectDepartamento) {
 
             data = {
                 ...datosForm,
@@ -90,12 +184,26 @@ const FormCotisation = () => {
                     "accept": "application/json"
                 },
                 body: JSON.stringify(data)
-            }).then(async response=>{
+            }).then(async response => {
                 const validation = await response.json();
                 console.log(validation);
             });
-        } else{
-            return
+            Swal.fire({
+                position: 'center',
+                icon: "success",
+                title: 'Cotizacion enviada',
+                showConfirmButton: false,
+                timer: 1900
+            });;
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Por favor complete los campos',
+                showConfirmButton: false,
+                timer: 1900
+            });
+            return;
         }
     };
 
@@ -122,6 +230,9 @@ const FormCotisation = () => {
                         <input type="text" className="form-control"
                             name="nombre" id="floatingNombre" placeholder="Ingrese el nombre"
                             onChange={hadleInputs}
+                            required
+                            maxLength={40}
+                            onKeyPress={handleLett}
                         />
                         <label htmlFor="flotingNombrel">Nombre completo</label>
                     </div>
@@ -130,6 +241,8 @@ const FormCotisation = () => {
                         <input type="email" className="form-control"
                             name="email" id="floatingEmail" placeholder="Ingrese un correo"
                             onChange={hadleInputs}
+                            required
+                            maxLength={60}
                         />
                         <label htmlFor="floatingEmail">Email</label>
                     </div>
@@ -138,6 +251,9 @@ const FormCotisation = () => {
                         <input type="text" className="form-control" name="celular"
                             id="floatingTelefono" placeholder="Ingrese un telefono"
                             onChange={hadleInputs}
+                            maxLength={10}
+                            onKeyPress={handleNum}
+                            required
                         />
                         <label htmlFor="floatingEmail">Número celular</label>
                     </div>
@@ -148,7 +264,7 @@ const FormCotisation = () => {
                                 <select className="form-select" id="foatingDepartamento"
                                     name="departamento" onChange={handleDepartamento}
                                 >
-                                    <option defaultChecked>-</option>
+                                    <option defaultChecked value={false}>-</option>
                                     <option value="Valle del Cauca">Valle del cauca</option>
                                     <option value="Antioquia">Antioquia</option>
                                     <option value="Bogotá D.C.">Bogotá D.C.</option>
@@ -163,7 +279,7 @@ const FormCotisation = () => {
                                         <select className="form-select" name="ciudad"
                                             id="floatingCiudad" onChange={handleCiudad}
                                         >
-                                            <option value="0">----</option>
+                                            <option value={false}>----</option>
                                             {
                                                 ciudad.data.map((ciu, index) => (
 
